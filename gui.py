@@ -9,12 +9,13 @@ from idlelib.tooltip import Hovertip
 from datetime import timedelta
 import tkinter as tki
 import tkinter.messagebox
+from tkinter import *
 
 # endregion import
 
 # region GAME SETTINGS
 BOARD_SIZE: int = 4
-TIMER_DURATION: int = 180  # default duration of the timer, in seconds
+TIMER_DURATION: int = 120  # default duration of the timer, in seconds
 TIMER_DELAY_IN_MS: int = 1000  # default delay in milliseconds
 BOARD_BUTTON_TEXT: str = "❓"  # default text of a button on the board
 FONT: str = 'Segoe UI'
@@ -36,7 +37,7 @@ ACTION_BUTTON_ACTIVE_BG_COLOR: str = "#86C8BC"
 # region CONSTANTS
 FONT_TYPES: Dict = {
     "button": (FONT, 20, 'bold'),
-    "board_button": (FONT, 16, 'bold'),
+    "board_button": (FONT, 60, 'bold'),
     "info_title": (FONT, 20, 'bold', 'underline'),
     "info": (FONT, 20),
     "listbox": (FONT, 14)
@@ -67,6 +68,7 @@ MESSAGES = {
                  "You managed to find {0} words, and score a total of {1} "
                  "points."
 }
+
 
 
 # endregion CONSTANTS
@@ -117,6 +119,7 @@ class GUI:
         self._frame_info_init()
 
     # region game frame
+    
     def _frame_game_init(self) -> None:
         """
         Creates the 'game' frame: the main frame which includes the game
@@ -157,8 +160,8 @@ class GUI:
             for j in range(BOARD_SIZE):
                 self._buttons_board[(i, j)] = tki.Button(
                     self._frame_board,
-                    width=5,
-                    height=2,
+                    width=2,
+                    height=1,
                     **BOARD_BUTTON_STYLE
                 )
                 self._buttons_board[(i, j)].grid(
@@ -251,7 +254,7 @@ class GUI:
         self._frame_info = tki.Frame(
             self._root,
             background=INFO_HUD_BG_COLOR,
-            width=300
+            width=300,
         )
         self._frame_info.pack(side=tki.RIGHT, fill=tki.BOTH, expand=False)
         self._frame_info.pack_propagate(False)  # overrides default width
@@ -259,6 +262,14 @@ class GUI:
         self._container_score_init()
         self._container_curr_word_init()
         self._container_words_found_init()
+        
+        self._button_settings = tki.Button(
+            self._frame_info,
+            text='Settings',
+            command=self.open_settings_menu,
+            **ACTION_BUTTON_STYLE
+        )
+        self._button_settings.pack(side=tki.BOTTOM)
 
     def _container_score_init(self) -> None:
         """
@@ -292,7 +303,10 @@ class GUI:
             font=FONT_TYPES['info']
         )
         self._label_score.pack(side=tki.TOP)
-
+        
+    def open_settings_menu(self):
+        print("Opening settings menu...")
+        
     def _container_curr_word_init(self) -> None:
         """
         Creates a container for the current word selected by the user
